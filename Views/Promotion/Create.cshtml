@@ -1,0 +1,145 @@
+﻿@using ProjectPromotion.Models;
+@model PromotionViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Promotion Page</h2>
+
+<hr />
+<form asp-action="Create" enctype="multipart/form-data" asp-controller="Promotion" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label asp-for="Promotion.IdPromotion" class="control-label"></label>
+            <input asp-for="Promotion.IdPromotion" class="form-control" disabled />
+            <span asp-validation-for="Promotion.IdPromotion" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Promotion.PromoDescription" class="control-label"></label>
+            <input asp-for="Promotion.PromoDescription" class="form-control" placeholder="1234 dst" />
+            <span asp-validation-for="Promotion.PromoDescription" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Promotion.PromoType" class="control-label"></label>
+            <select asp-for="Promotion.PromoType" class="form-control">
+                <option>-- Select --</option>
+                <option>Simple Discount</option>
+                <option>Completed Discount</option>
+            </select>
+            <span asp-validation-for="Promotion.PromoType" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Promotion.PromoDuration" class="control-label"></label>
+            <input asp-for="Promotion.PromoDuration" class="form-control" />
+            <span asp-validation-for="Promotion.PromoDuration" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Promotion.ValueType" class="control-label"></label>
+            <select id="" class="form-control">
+                <option>-- Select --</option>
+                <option data-id="1">Percentage</option>
+                <option data-id="2">Amount</option>
+            </select>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputValue">Value</label>
+            <input asp-for="Promotion.ValueType" class="form-control" placeholder="123" />
+            <span asp-validation-for="Promotion.ValueType" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Promotion.Item" class="control-label"></label>
+        <div class="custom-file">
+            <input asp-for="Promotion.Item" class="custom-file-input" id="customFile" />
+            <label class="custom-file-label" for="customFile">Choose File</label>
+        </div>
+        <span asp-validation-for="Promotion.Item" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <table class="table table-bordered table-hover table-responsive-sm" width="60px" height="30%">
+            <thead>
+                <tr>
+                    <th>Store</th>
+                    <th>Store Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Stores stores in Model.StoresViewModel)
+                {
+                    <tr>
+                        <td>@stores.Store</td>
+                        <td>@stores.StoreName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        <input type="reset" value="Cancel" class="btn btn-danger" onclick="ResetForm" />
+    </div>
+</form>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<!-- Include Required Prerequisites -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+
+<!-- Include Date Range Picker -->
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
+
+
+<script type="text/javascript">
+    $('input[name="Promotion.PromoDuration"]').daterangepicker(
+        {
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        },
+
+        $('input[name="Promotion.PromoDuration"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'))
+        }),
+
+        $('input[name="Promotion.PromoDuration"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+        }));
+</script>
+
+<script type="text/javascript">
+    var percent = 100;
+    $('select').change(function () {
+        console.log('value =    ' + $(':selected', $(this)).data('id'));
+
+        if ($(':selected', $(this)).data('id') === 1) {
+
+        }
+    });
+
+</script>
+
+<script type="text/javascript">
+    function ResetForm() {
+        $("[asp-for='PromoDescription']").val("");
+        $("[asp-for='PromoType']").val("");
+        $("[asp-for='PromoDuration']").val("");
+        $("[asp-for='ValueType']").val("");
+        $("[asp-for='Item']").val("");
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
